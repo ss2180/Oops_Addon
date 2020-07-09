@@ -1,0 +1,7 @@
+## Interface: 11305
+## Title: |cFF00FF00<Oops>|r Guild Addon
+## Notes: Shames players that take aggro from the tanks
+## Author: Rheea
+## Version 0.1
+
+Oops_Addon.lua
