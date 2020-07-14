@@ -2,20 +2,33 @@ local mainTankLastStatus = 0
 local mainAssistLastStatus = 0
 local tankErrorMessage = false
 local addonToggle = true
+local addonDebug = false
 
-local function MyAddonCommands(msg, editbox)
+local function ToggleOops(msg, editbox)
     if addonToggle == true then
         addonToggle = false
-        print("false")
+        print("Addon Disabled")
     else
         addonToggle = true
-        print("true")
+        print("Addon Enabled")
+    end
+end
+
+local function ToggleDebug(msg, editbox)
+    if addonDebug == true then
+        addonDebug = false
+        print("Debug Mode Disabled")
+    else
+        addonDebug = true
+        print("Debug Mode Enabled")
     end
 end
   
-SLASH_TOGGLEOOPS1 = '/toggleoops'
+SLASH_TOGGLEOOPS1, SLASH_TOGGLEOOPS2 = '/oopstog', '/oopstoggle'
+SLASH_TOGGLEDEBUG1 = '/oopsdebug'
 
-SlashCmdList["TOGGLEOOPS"] = MyAddonCommands
+SlashCmdList["TOGGLEOOPS"] = ToggleOops
+SlashCmdList["TOGGLEDEBUG"] = ToggleDebug
 
 
 local function eventHandler(self, event, ...)
@@ -35,7 +48,10 @@ local function eventHandler(self, event, ...)
 
                 -- Check status of main tank
                 if (mainTankLastStatus == 3 or mainTankLastStatus == 2) and (mainTankStatus == 0 or mainTankStatus == 1) then
-                    --print("Main tank lost aggro")
+
+                    if addonDebug == true then
+                        print("Main tank lost aggro")
+                    end
 
                     for i = 1, GetNumGroupMembers()
                     do
@@ -43,8 +59,9 @@ local function eventHandler(self, event, ...)
                             SendChatMessage("<Oops> " .. (select(1,GetRaidRosterInfo(i))) .. " pulled the boss!", "RAID_WARNING", nil)
                         end 
                     end
-                --elseif(mainTankLastStatus == 0 or mainTankLastStatus == 1) and (mainTankStatus == 2 or mainTankStatus == 3) then
-                    --print("Main tank took aggro")
+
+                elseif(mainTankLastStatus == 0 or mainTankLastStatus == 1) and (mainTankStatus == 2 or mainTankStatus == 3) and addonDebug == true then
+                    print("Main tank took aggro")
                 end
                 
                 mainTankLastStatus = mainTankStatus
@@ -52,7 +69,10 @@ local function eventHandler(self, event, ...)
 
                 --Check status of main assist
                 if (mainAssistLastStatus == 3 or mainAssistLastStatus == 2) and (mainAssistStatus == 0 or mainAssistStatus == 1) then
-                    --print("Main Assist lost aggro")
+
+                    if addonDebug == true then
+                        print("Assist tank lost aggro")
+                    end
 
                     for i = 1, GetNumGroupMembers()
                     do
@@ -60,8 +80,9 @@ local function eventHandler(self, event, ...)
                             SendChatMessage("<Oops> " .. (select(1,GetRaidRosterInfo(i))) .. " pulled the boss!", "RAID_WARNING", nil)
                         end 
                     end
-                --elseif(mainAssistLastStatus == 0 or mainAssistLastStatus == 1) and (mainAssistStatus == 2 or mainAssistStatus == 3) then
-                    --print("Main assist took aggro")
+
+                elseif(mainAssistLastStatus == 0 or mainAssistLastStatus == 1) and (mainAssistStatus == 2 or mainAssistStatus == 3) and addonDebug == true then
+                    print("Main assist took aggro")
                 end
 
                 mainAssistLastStatus = mainAssistStatus
