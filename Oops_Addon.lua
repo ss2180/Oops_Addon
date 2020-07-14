@@ -1,11 +1,27 @@
 local mainTankLastStatus = 0
 local mainAssistLastStatus = 0
 local tankErrorMessage = false
+local addonToggle = true
+
+local function MyAddonCommands(msg, editbox)
+    if addonToggle == true then
+        addonToggle = false
+        print("false")
+    else
+        addonToggle = true
+        print("true")
+    end
+end
+  
+SLASH_TOGGLEOOPS1 = '/toggleoops'
+
+SlashCmdList["TOGGLEOOPS"] = MyAddonCommands
+
 
 local function eventHandler(self, event, ...)
     
     -- Checks that the player is both in a raid group and is the raid leader
-    if not (UnitInRaid("player") == nil) and (select(2, GetRaidRosterInfo(UnitInRaid("player")))) == 2 then
+    if not (UnitInRaid("player") == nil) and (select(2, GetRaidRosterInfo(UnitInRaid("player")))) == 2 and (addonToggle == true) then
         -- Fires whenever the threat table is updated
         if event == "UNIT_THREAT_LIST_UPDATE" then
             local mainTankID = GetPartyAssignment("MAINTANK")
@@ -30,7 +46,7 @@ local function eventHandler(self, event, ...)
                 --elseif(mainTankLastStatus == 0 or mainTankLastStatus == 1) and (mainTankStatus == 2 or mainTankStatus == 3) then
                     --print("Main tank took aggro")
                 end
-
+                
                 mainTankLastStatus = mainTankStatus
 
 
